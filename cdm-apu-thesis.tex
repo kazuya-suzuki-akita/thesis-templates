@@ -1,0 +1,284 @@
+% jthesis.sty 29-Nov-92 by T. Tanaka
+% on the basis of:
+% jreport.sty 22-Mar-88
+% version 1-Feb-96; modified by T. Tanaka
+% version 5-Dec-2023; modified by K.Suzuki
+
+\typeout{Document Style `jthesis' (mutant of `jreport'),
+	by K. Suzuki. <5 Dec 2023>}
+
+\makeatletter
+%%%%%%
+
+\def\labelenumi{\arabic{enumi}.} 
+\def\theenumi{\arabic{enumi}} 
+\def\labelenumii{(\alph{enumii})}
+\def\theenumii{\alph{enumii}}
+\def\p@enumii{\theenumi}
+\def\labelenumiii{\roman{enumiii}.}
+\def\theenumiii{\roman{enumiii}}
+\def\p@enumiii{\theenumi(\theenumii)}
+\def\labelenumiv{\Alph{enumiv}.}
+\def\theenumiv{\Alph{enumiv}} 
+\def\p@enumiv{\p@enumiii\theenumiii}
+
+\def\labelitemi{$\bullet$}
+\def\labelitemii{\bf --}
+\def\labelitemiii{$\ast$}
+\def\labelitemiv{$\cdot$}
+
+\def\verse{\let\\=\@centercr 
+ \list{}{\itemsep\z@ \itemindent -1.5em\listparindent \itemindent 
+ \rightmargin\leftmargin\advance\leftmargin 1.5em}\item[]}
+\let\endverse\endlist
+\def\quotation{\list{}{\listparindent 1.5em
+ \itemindent\listparindent
+ \rightmargin\leftmargin\parsep 0pt plus 1pt}\item[]}
+\let\endquotation=\endlist
+\def\quote{\list{}{\rightmargin\leftmargin}\item[]}
+\let\endquote=\endlist
+
+\def\descriptionlabel#1{\hspace\labelsep \bf #1}
+\def\description{\list{}{\labelwidth\z@ \itemindent-\leftmargin
+ \let\makelabel\descriptionlabel}}
+\let\enddescription\endlist
+\newdimen\descriptionmargin
+\descriptionmargin=3em
+
+%%%%%%
+
+\def\titlepage{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \else \newpage \fi \thispagestyle{empty}\c@page\z@}
+\def\endtitlepage{\if@restonecol\twocolumn \else \newpage \fi}
+
+\arraycolsep 5pt \tabcolsep 6pt \arrayrulewidth .4pt \doublerulesep 2pt 
+\tabbingsep \labelsep 
+\skip\@mpfootins = \skip\footins
+\fboxsep = 3pt \fboxrule = .4pt 
+
+%%%%%%
+
+\def\thepart {\Roman{part}}
+\def\thechapter {\arabic{chapter}}
+\def\thesection {\thechapter.\arabic{section}}
+\def\thesubsection {\thesection.\arabic{subsection}}
+\def\thesubsubsection {\thesubsection .\arabic{subsubsection}}
+\def\theparagraph {\thesubsubsection.\arabic{paragraph}}
+\def\thesubparagraph {\theparagraph.\arabic{subparagraph}}
+
+\def\@sect#1#2#3#4#5#6[#7]#8{\ifnum #2>\c@secnumdepth
+     \def\@svsec{}\else 
+     \refstepcounter{#1}\edef\@svsec{\csname the#1\endcsname\hskip 1em }\fi
+     \@tempskipa #5\relax
+      \ifdim \@tempskipa>\z@ 
+	   \ifnum #2=1
+        \begingroup #6\relax
+		 \setbox0=\hbox{#6 9.9\hskip1em}\ifdim \wd0<\oddsidemargin
+          \noindent
+		  \hbox to0pt{\hss\hbox to\oddsidemargin{\@svsec\hfil}}%
+		  {\interlinepenalty \@M #8\par}
+		 \else
+          \@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}
+		 \fi
+        \endgroup
+	   \else
+        \begingroup #6\relax
+          \@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}
+        \endgroup
+	   \fi
+       \csname #1mark\endcsname{#7}\addcontentsline
+         {toc}{#1}{\ifnum #2>\c@secnumdepth \else
+                      \protect\numberline{\csname the#1\endcsname}\fi
+                    #7}\else
+        \def\@svsechd{#6\hskip #3\@svsec #8\csname #1mark\endcsname
+                      {#7}\addcontentsline
+                           {toc}{#1}{\ifnum #2>\c@secnumdepth \else
+                             \protect\numberline{\csname the#1\endcsname}\fi
+                       #7}}\fi
+     \@xsect{#5}}
+
+% Acknowledgement.
+% Use it as `\acknowledgement[Arigato]{Domo Arigato!!!}'.
+%
+\def\acknowledgement{\clearpage \thispagestyle{plain}
+ \global\@topnum\z@ \@afterindenttrue
+ \secdef\@acknowledge\@sacknowledge}
+\def\@acknowledge[#1]#2{\addcontentsline{toc}{chapter}{#1}
+ \chaptermark{#1}
+ \addtocontents{lof}{\protect\addvspace{10pt}}
+ \addtocontents{lot}{\protect\addvspace{10pt}}
+ \if@twocolumn \@topnewpage[\@makeackhead{#2}]
+ \else \@makeackhead{#2}\@afterheading \fi} 
+\def\@sacknowledge#1{\if@twocolumn \@topnewpage[\@makeackhead{#1}]
+ \else \@makeackhead{#1}\@afterheading \fi}
+\def\@makeackhead#1{ \vspace*{50pt}{\parindent 0pt \raggedright
+ \huge\bf #1\par\nobreak\vskip40pt}}
+
+%%%%%
+
+\setcounter{topnumber}{2}
+\def\topfraction{.7}
+\setcounter{bottomnumber}{1}
+\def\bottomfraction{.3}
+\setcounter{totalnumber}{3}
+\def\textfraction{.2}
+\def\floatpagefraction{.5}
+\setcounter{dbltopnumber}{2}
+\def\dbltopfraction{.7}
+\def\dblfloatpagefraction{.5}
+
+\long\def\@makecaption#1#2{
+ \vskip 10pt 
+ \setbox\@tempboxa\hbox{#1\quad #2}
+ \ifdim \wd\@tempboxa >\hsize \unhbox\@tempboxa\par \else \hbox
+to\hsize{\hfil\box\@tempboxa\hfil} 
+ \fi}
+
+\def\thefigure{\thechapter.\@arabic\c@figure}
+\def\fps@figure{tbp}
+\def\ftype@figure{1}
+\def\ext@figure{lof}
+\def\fnum@figure{図 \thefigure}
+\def\figure{\@float{figure}}
+\let\endfigure\end@float
+\@namedef{figure*}{\@dblfloat{figure}}
+\@namedef{endfigure*}{\end@dblfloat}
+
+\def\thetable{\thechapter.\@arabic\c@table}
+\def\fps@table{tbp}
+\def\ftype@table{2}
+\def\ext@table{lot}
+\def\fnum@table{表 \thetable}
+\def\table{\@float{table}}
+\let\endtable\end@float
+\@namedef{table*}{\@dblfloat{table}}
+\@namedef{endtable*}{\end@dblfloat}
+
+%%%%%
+
+%%%%%
+
+%\input titlepage.sty
+\def\@nendo{\the\year}
+\def\nendo#1{\gdef\@nendo{#1}\gdef\nendo{}}
+\def\@category{学位論文}
+\def\category#1{\ifx#1b\gdef\@category{卒業論文}\else
+	\ifx#1m\gdef\@category{修士論文}\else\gdef\@category{学位論文}\fi\fi
+	\gdef\category{}}
+%
+% From: titlepage.sty  27 Jan 85
+%
+\def\maketitle{\begin{titlepage}
+\let\footnotesize\small \let\footnoterule\relax \setcounter{page}{0}
+\null
+\vfil \begin{center}
+{\huge {\if西暦\count0=\@nendo\else%
+\count0=\@nendo\advance\count0 -2018 令和\ \fi%
+\number\count0\ }年度 \\ \@category \par} \vskip 30mm
+{\Huge \@title \par} \vskip 50mm {\Large \lineskip .75em
+\begin{tabular}[t]{c}\@author 
+\end{tabular}\par} 
+% \vskip 1.5em {\large \@date \par}
+\end{center} \par
+\@thanks
+\vfil
+\null
+\end{titlepage}
+\setcounter{footnote}{0} \let\thanks\relax
+\gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\maketitle\relax} 
+\def\abstract{\titlepage
+\null\vfil
+\begin{center}
+{\bf Abstract}
+\end{center}}
+\def\endabstract{\par\vfil\null\endtitlepage}
+% End of titlepage.
+
+%%%%%
+
+\mark{{}{}} 
+
+\if@twoside \def\ps@headings{\let\@mkboth\markboth
+  \def\@oddfoot{}
+  \def\@evenfoot{}
+  \def\@evenhead{\hss\underline{%
+    \dimen0=\textwidth\advance\dimen0 by\evensidemargin%
+    \hbox to\dimen0{\hbox to15mm{\bf\thepage\hfil}%
+	\hfil\bf\leftmark}}}
+  \def\@oddhead{\hss\underline{%
+    \dimen0=\textwidth\advance\dimen0 by\oddsidemargin%
+    \hbox to\dimen0{\kern-2pt% This fixation is necessary.
+        \bf\rightmark\hfil%
+	\hbox to15mm{\hfil\bf\thepage}}}}
+  \def\chaptermark##1{\markboth%{\uppercase
+  {\ifnum \c@secnumdepth>\m@ne%
+  \setbox0=\hbox{\@chapapp{\thechapter}\quad} \ifdim\wd0<\oddsidemargin%
+    \hbox to\oddsidemargin{\unhbox0\hfil}\kern-2pt% This fixation is necessary.
+  \else%
+    \unhbox0%
+  \fi
+  \fi ##1}{}}
+  \def\sectionmark##1{\markright
+  {\uppercase{\ifnum \c@secnumdepth >\z@
+  \thesection. \ \fi ##1}}}}
+\else
+  \def\ps@headings{\let\@mkboth\markboth
+  \def\@oddfoot{}
+  \def\@evenfoot{}
+  \def\@oddhead{\hss\underline{%
+    \dimen0=\textwidth\advance\dimen0 by\oddsidemargin%
+    \hbox to\dimen0{\kern-2pt% This fixation is necessary.
+        \bf\rightmark\hfil
+	\hbox to15mm{\hfil\bf\thepage}}}}
+  \def\chaptermark##1{\markright%{\uppercase
+  {\ifnum \c@secnumdepth>\m@ne%
+  \setbox0=\hbox{\@chapapp{\thechapter}\quad} \ifdim\wd0<\oddsidemargin%
+    \hbox to\oddsidemargin{\unhbox0\hfil}\kern-2pt% This fixation is necessary.
+  \else%
+    \unhbox0%
+  \fi
+  \fi ##1}}}
+\fi
+\def\ps@myheadings{\let\@mkboth\@gobbletwo
+\def\@oddhead{\hbox{}\sl\rightmark \hfil
+\rm\thepage}\def\@oddfoot{}\def\@evenhead{\rm \thepage\hfil\sl\leftmark\hbox
+{}}\def\@evenfoot{}\def\sectionmark##1{}\def\subsectionmark##1{}}
+
+% Re-initialization for plain page style.
+\def\ps@plain{\let\@mkboth\@gobbletwo
+  \def\@oddhead{\hbox to\textwidth{\hfil\bf\thepage}}\def\@oddfoot{}
+  \def\@evenhead{\hbox to\textwidth{\kern-\evensidemargin%
+   \bf\thepage\hfil}}\def\@evenfoot{}}
+
+%%%%%
+
+\newif\if西暦\let\if西暦=\iffalse \def\西暦{\let\if西暦=\iftrue}
+\def\today{{\if西暦\count0=\year\else%
+\count0=\year\advance\count0 -1988 平成\,\fi%
+\number\count0\,年\hspace{.5em}\nobreak%
+\number\month\,月\hspace{.5em}\nobreak\number\day\,日}}
+\@addtoreset{equation}{chapter} 
+\def\theequation{\thechapter.\arabic{equation}}
+
+%%%%%
+
+% Miscellaneous definitions. By: T. Tanaka.
+% Here's the eqnarray environment from latex.tex:
+%  Default is for left-hand side of equations to be flushleft.
+%  To make them flushright, \let\@eqnsel = \hfil
+
+\def\eqnarray{\stepcounter{equation}\let\@currentlabel=\theequation
+\global\@eqnswtrue
+\global\@eqcnt\z@\tabskip\@centering\let\\=\@eqncr
+$$\halign to \displaywidth\bgroup\@eqnsel\hskip\@centering
+  $\displaystyle\tabskip\z@{##}$&\global\@eqcnt\@ne
+  \hfil$\displaystyle{{}##{}}$\hfil&\global\@eqcnt\tw@
+  $\displaystyle\tabskip\z@{##}$\hfil
+  \tabskip\@centering&\llap{##}\tabskip\z@\cr}
+
+%%%%%
+
+\ps@plain \pagenumbering{arabic} \onecolumn \if@twoside\else\raggedbottom\fi 
+
+
+\makeatother
